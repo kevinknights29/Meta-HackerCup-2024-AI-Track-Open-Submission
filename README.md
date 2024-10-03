@@ -108,3 +108,16 @@ Repo to host my Meta HackerCup 2024 AI Track Open Submission.
 | 2014/round1/coins_game | 7/31 |
 | 2014/round1/labelmaker | FAIL |
 | 2016/round2/carnival_coins | 0/509 |
+
+## Deletting a Model
+
+If you would like to delete a model downloaded locally, run `huggingface-cli delete-cache`.
+
+Sample Output:
+
+```text
+? Select revisions to delete: 1 revision(s) selected.
+? 1 revisions selected counting for 27.0G. Confirm deletion ? Yes
+Start deletion.
+Done. Deleted 1 repo(s) and 0 revision(s) for a total of 27.0G
+```
