@@ -1,7 +1,19 @@
 # Source: https://github.com/HackerCupAI/starter-kits/blob/main/sample_data_solver/evaluate_programs.py
 
 import subprocess
+import sys
 from pathlib import Path
+
+from loguru import logger
+
+logger.add(
+    sys.stdout,
+    format="{time} | {level} | {file}:{function}:{line} - {message}",
+    level="INFO",
+)
+logging_dir = "logs/evaluation"
+Path(logging_dir).mkdir(parents=True, exist_ok=True)
+logger.add(f"{logging_dir}/" + "{time}.log")
 
 
 def main():
@@ -14,7 +26,7 @@ def main():
         p_in = "dataset/" + problem + ".in"
         p_out = "dataset/" + problem + ".out"
         run_str = f"python {p_program} < {p_in} > {p_program_out}"
-        print(run_str)
+        logger.info(run_str)
         try:
             subprocess.run(run_str, shell=True, timeout=60)
         except subprocess.TimeoutExpired:
@@ -36,10 +48,10 @@ def main():
 
         results.append((problem, f"{good}/{len(out)}"))
 
-    print("| Problem | Score |")
-    print("| ------- | ----- |")
+    logger.info("| Problem | Score |")
+    logger.info("| ------- | ----- |")
     for p, score in results:
-        print(f"| {p} | {score} |")
+        logger.info(f"| {p} | {score} |")
 
 
 if __name__ == "__main__":
