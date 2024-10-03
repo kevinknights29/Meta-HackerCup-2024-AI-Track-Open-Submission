@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import fire
 import torch
 import transformers
 from transformers import AutoTokenizer
@@ -9,16 +10,8 @@ from transformers import AutoTokenizer
 MAX_NEW_TOKENS = 500
 MAX_TIME = 120
 
-tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf")
-pipeline = transformers.pipeline(
-    "text-generation",
-    model="meta-llama/Llama-2-7b-hf",
-    torch_dtype=torch.float16,
-    device_map="auto",
-)
 
-
-def generate_func(ins, outs):
+def generate_func(pipeline, tokenizer, ins, outs):
     code = "def f(a):\n"
     code += '    """Returns solution\n'
     for i, o in zip(ins, outs):
@@ -139,10 +132,18 @@ def get_sample_ins_outs():
     return results
 
 
-def main():
+def main(model_id):
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    pipeline = transformers.pipeline(
+        "text-generation",
+        model=model_id,
+        torch_dtype=torch.float16,
+        device_map="auto",
+    )
+
     data = get_sample_ins_outs()
     for p_in, ins, outs in data:
-        f = generate_func(ins, outs)
+        f = generate_func(pipeline, tokenizer, ins, outs)
         p_program = (
             "programs/" + str(p_in)[len("dataset/") : -len("_sample_input.txt")] + ".py"
         )
@@ -152,4 +153,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    fire.Fire(main)
