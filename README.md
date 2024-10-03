@@ -38,3 +38,5 @@ Repo to host my Meta HackerCup 2024 AI Track Open Submission.
     - You will be prompted to type the repo id, i.e. `meta-llama/Llama-2-7b-hf`
 
     - Then, you will be prompted for your HuggingFace token for authentication. Please refer to [Security Tokens](https://huggingface.co/docs/hub/en/security-tokens)
+
+3. Download datasets from previous Hackercups with `scripts/downlaod_dataset.sh`.
