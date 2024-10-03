@@ -40,3 +40,71 @@ Repo to host my Meta HackerCup 2024 AI Track Open Submission.
     - Then, you will be prompted for your HuggingFace token for authentication. Please refer to [Security Tokens](https://huggingface.co/docs/hub/en/security-tokens)
 
 3. Download datasets from previous Hackercups with `scripts/downlaod_dataset.sh`.
+
+### Generating your first programs
+
+1. Create a virtual environment.
+
+    > For a faster experience, you can use [`uv`](https://github.com/astral-sh/uv)
+
+    ```bash
+    pip3 install uv && uv venv
+    ```
+
+2. Activate your virtual environment
+
+    ```bash
+    source .venv/bin/activate
+    ```
+
+3. Install dependencies
+
+    ```bash
+    uv pip install -r requirements.txt
+    ```
+
+4. Run `python generate_programs.py`.
+
+    >NOTE: You need to update the model id to match the own you download earlier.
+
+5. Run `python evaluate_programs.py`.
+
+#### My first results with `meta-llama/Llama-2-7b-hf`
+
+| Problem | Score |
+| ------- | ----- |
+| 2012/round3/divisor_function_optimization | 0/60 |
+| 2012/finals/linsane_phone_numbers | 0/15 |
+| 2012/finals/maximal_multiplicative_order | 0/60 |
+| 2012/quals/auction | FAIL |
+| 2012/quals/alphabet_soup | 2/60 |
+| 2012/quals/billboards | 0/60 |
+| 2012/round1/checkpoint | FAIL |
+| 2011/round1a/wine_tasting | 0/50 |
+| 2011/round1b/diminishing_circle | 0/60 |
+| 2011/round1b/slot_machine_hacker | FAIL |
+| 2011/round2/studious_student_ii | 0/60 |
+| 2011/round2/bonus_assignments | 0/60 |
+| 2011/quals/double_squares | FAIL |
+| 2011/quals/peg_game | FAIL |
+| 2011/quals/studious_student | 21/39 |
+| 2011/round1c/n_factorful | 1/50 |
+| 2013/finals/teleports | 0/31 |
+| 2013/finals/archiver | FAIL |
+| 2013/finals/colored_trees | 0/60 |
+| 2013/round2/cake_cutting | 0/50 |
+| 2013/round2/roboelection | 6/100 |
+| 2013/quals/beautiful_strings | FAIL |
+| 2013/quals/balanced_smileys | FAIL |
+| 2013/round1/dead_pixels | 0/40 |
+| 2015/round2/all_critical | 0/98 |
+| 2015/quals/cooking_the_books | 0/100 |
+| 2015/round1/homework | 0/100 |
+| 2015/round1/winning_at_sports | FAIL |
+| 2017/finals/patrols | 0/30 |
+| 2017/round2/subtlesabotage | 0/15005 |
+| 2017/quals/progresspie | FAIL |
+| 2014/quals/tennison | 0/92 |
+| 2014/round1/coins_game | 7/31 |
+| 2014/round1/labelmaker | FAIL |
+| 2016/round2/carnival_coins | 0/509 |
