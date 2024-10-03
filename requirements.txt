@@ -2,6 +2,7 @@ accelerate==0.34.2
 certifi==2024.8.30
 charset-normalizer==3.3.2
 filelock==3.16.1
+fire==0.7.0
 fsspec==2024.9.0
 huggingface-hub==0.25.1
 idna==3.10
@@ -32,6 +33,7 @@ regex==2024.9.11
 requests==2.32.3
 safetensors==0.4.5
 sympy==1.13.3
+termcolor==2.4.0
 tokenizers==0.20.0
 torch==2.4.1
 tqdm==4.66.5
