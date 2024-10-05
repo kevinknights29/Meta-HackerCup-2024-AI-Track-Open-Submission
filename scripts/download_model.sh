@@ -9,9 +9,10 @@ else
     echo "python3-pip is already installed."
 fi
 
-# Suppress warning if running pip as root
-PIP_ROOT_USER_ACTION=ignore pip3 install huggingface_hub[hf_transfer]
+# Install huggingface transfer
+uv pip install huggingface_hub[hf_transfer]
 
+# Enable huggingface transfer
 HF_HUB_ENABLE_HF_TRANSFER=1 
 
 # Add repo id as input
@@ -23,3 +24,5 @@ echo "Please enter your Hugging Face token (input will be hidden):"
 read -s token
 
 huggingface-cli download "$repo_id" --token "$token" 
+
+echo "Downloaded model!"
