@@ -3,3 +3,4 @@ max_new_tokens: 500
 max_time: 120
 dataset_dir: "/mnt/data/dataset/"
 programs_dir: "/mnt/data/programs/"
+results_dir: "/mnt/data/results/"
