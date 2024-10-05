@@ -43,31 +43,13 @@ Repo to host my Meta HackerCup 2024 AI Track Open Submission.
 
 ### Generating your first programs
 
-1. Create a virtual environment.
+1. Run `. scripts/setup_env.sh`. 
 
-    > For a faster experience, you can use [`uv`](https://github.com/astral-sh/uv)
-
-    ```bash
-    pip3 install uv && uv venv
-    ```
-
-2. Activate your virtual environment
-
-    ```bash
-    source .venv/bin/activate
-    ```
-
-3. Install dependencies
-
-    ```bash
-    uv pip install -r requirements.txt
-    ```
-
-4. Run `python generate_programs.py`.
+2. Run `python generate_programs.py`.
 
     >NOTE: You need to update the model id to match the own you download earlier.
 
-5. Run `python evaluate_programs.py`.
+3. Run `python evaluate_programs.py`.
 
 #### My first results with `meta-llama/Llama-2-7b-hf`
 
