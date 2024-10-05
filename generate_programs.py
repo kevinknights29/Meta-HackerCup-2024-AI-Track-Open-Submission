@@ -16,6 +16,9 @@ logger.add(
     format="{time} | {level} | {file}:{function}:{line} - {message}",
     level="INFO",
 )
+logging_dir = "logs/generation"
+Path(logging_dir).mkdir(parents=True, exist_ok=True)
+logger.add(f"{logging_dir}/" + "{time}.log")
 
 # Load Config
 with open("config.yaml", encoding="utf-8") as f:
@@ -155,9 +158,12 @@ def main():
 
     data = get_sample_ins_outs()
     for p_in, ins, outs in data:
+        logger.info(f"Generating solution for {p_in}...")
         f = generate_func(pipeline, tokenizer, ins, outs)
         p_program = (
-            "programs/" + str(p_in)[len("dataset/") : -len("_sample_input.txt")] + ".py"
+            conf["programs_dir"]
+            + str(p_in)[len(conf["dataset_dir"]) : -len("_sample_input.txt")]
+            + ".py"
         )
         p_program = Path(p_program)
         p_program.parent.mkdir(parents=True, exist_ok=True)
