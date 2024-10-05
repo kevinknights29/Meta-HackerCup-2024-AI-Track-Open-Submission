@@ -37,13 +37,11 @@ Repo to host my Meta HackerCup 2024 AI Track Open Submission.
     git clone git@github.com:kevinknights29/Meta-HackerCup-2024-AI-Track-Open-Submission.git
     ```
 
-2. Download model from HuggingFace running `scripts/download_model.sh`.
-
-    - You will be prompted to type the repo id, i.e. `meta-llama/Llama-2-7b-hf`
+2. Download model from HuggingFace running `. scripts/download_model.sh <repo_id> <local_dir>`.
 
     - Then, you will be prompted for your HuggingFace token for authentication. Please refer to [Security Tokens](https://huggingface.co/docs/hub/en/security-tokens)
 
-3. Download datasets from previous Hackercups with `scripts/downlaod_dataset.sh`.
+3. Download datasets from previous Hackercups with `. scripts/downlaod_dataset.sh <local_dir>`.
 
 ### Generating your first programs
 
