@@ -10,6 +10,10 @@ Repo to host my Meta HackerCup 2024 AI Track Open Submission.
 
     - I'm using an A100 VM from [Datacrunch.io](https://datacrunch.io/products#A100), due to their low pricing. ![image](https://github.com/user-attachments/assets/d0b06ed0-ff53-4598-a995-3d853f9546da)
 
+    - I'm using a 100 GB volume from [Datacrunch.io](https://datacrunch.io), to optimize the cost of the vm. If I increase the volume of the boot disk when deploying the VM, the storage costs exceed the VM's cost. ![image](https://github.com/user-attachments/assets/4dfb2fae-4ee9-42c6-9baf-adfde4b2d122)
+
+        > NOTE: I have a guide for mounting a volume [here](./scripts/mount_volume.md).
+
 2. Create an SSH key to access your VM.
 
     ```bash
