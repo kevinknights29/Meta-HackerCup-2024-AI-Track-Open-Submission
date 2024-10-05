@@ -45,13 +45,13 @@ Repo to host my Meta HackerCup 2024 AI Track Open Submission.
 
 ### Generating your first programs
 
-1. Run `. scripts/setup_env.sh`. 
+1. Run `. scripts/setup_env.sh`.
 
-2. Run `python generate_programs.py`.
+2. Update `config.yaml` with your model, dataset, programs, and results directories.
 
-    >NOTE: You need to update the model id to match the own you download earlier.
+3. Run `python generate_programs.py`.
 
-3. Run `python evaluate_programs.py`.
+4. Run `python evaluate_programs.py`.
 
 #### My first results with `meta-llama/Llama-2-7b-hf`
 
@@ -93,7 +93,7 @@ Repo to host my Meta HackerCup 2024 AI Track Open Submission.
 | 2014/round1/labelmaker | FAIL |
 | 2016/round2/carnival_coins | 0/509 |
 
-## Deletting a Model
+## Deleting a Model
 
 If you would like to delete a model downloaded locally, run `huggingface-cli delete-cache`.
 
