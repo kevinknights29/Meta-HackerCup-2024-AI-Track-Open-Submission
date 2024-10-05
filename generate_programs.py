@@ -1,14 +1,26 @@
 # Source: https://github.com/HackerCupAI/starter-kits/blob/main/sample_data_solver/generate_programs.py
 
+import sys
 from pathlib import Path
 
-import fire
 import torch
 import transformers
+from loguru import logger
 from transformers import AutoTokenizer
+from yaml import load
+from yaml.loader import SafeLoader
 
-MAX_NEW_TOKENS = 500
-MAX_TIME = 120
+# Setup Logger
+logger.add(
+    sys.stdout,
+    format="{time} | {level} | {file}:{function}:{line} - {message}",
+    level="INFO",
+)
+
+# Load Config
+with open("config.yaml", encoding="utf-8") as f:
+    conf = load(f, Loader=SafeLoader)
+logger.info("Config loaded!")
 
 
 def generate_func(pipeline, tokenizer, ins, outs):
@@ -25,10 +37,10 @@ def generate_func(pipeline, tokenizer, ins, outs):
         temperature=0.1,
         num_return_sequences=1,
         eos_token_id=tokenizer.eos_token_id,
-        max_new_tokens=MAX_NEW_TOKENS,
+        max_new_tokens=conf["max_new_tokens"],
         tokenizer=tokenizer,
         stop_strings=["def "],  # stop if second func started
-        max_time=MAX_TIME,  # seconds
+        max_time=conf["max_time"],  # seconds
     )[0]
     full_result = seq["generated_text"]
 
@@ -92,7 +104,7 @@ def get_sample_ins_outs():
     # Find problems where each test case
     # is one input line and one output line.
     suitable_problems = []
-    for p_in in Path("dataset").glob("**/*_sample_input.txt"):
+    for p_in in Path(conf["dataset_dir"]).glob("**/*_sample_input.txt"):
         with open(p_in, "r") as f:
             num_cases = int(f.readline())
             num_lines = len(f.readlines())
@@ -132,11 +144,11 @@ def get_sample_ins_outs():
     return results
 
 
-def main(model_id):
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
+def main():
+    tokenizer = AutoTokenizer.from_pretrained(conf["model_dir"])
     pipeline = transformers.pipeline(
         "text-generation",
-        model=model_id,
+        model=conf["model_dir"],
         torch_dtype=torch.float16,
         device_map="auto",
     )
@@ -150,7 +162,13 @@ def main(model_id):
         p_program = Path(p_program)
         p_program.parent.mkdir(parents=True, exist_ok=True)
         p_program.write_text(f + template)
+        logger.info(f"Wrote program {p_program}!")
 
 
 if __name__ == "__main__":
-    fire.Fire(main)
+    import time
+
+    logger.info("Started Generation Script!")
+    start_time = time.time()
+    main()
+    logger.info(f"Execution Time: {time.time() - start_time} seconds")
