@@ -1,0 +1,4 @@
+model_dir: "/mnt/data/models/meta-llama/CodeLlama-13b-Python-hf"
+max_new_tokens: 500
+max_time: 120
+dataset_dir: "/mnt/data/dataset/"
