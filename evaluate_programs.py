@@ -5,7 +5,10 @@ import sys
 from pathlib import Path
 
 from loguru import logger
+from yaml import load
+from yaml.loader import SafeLoader
 
+# Setup Logger
 logger.add(
     sys.stdout,
     format="{time} | {level} | {file}:{function}:{line} - {message}",
@@ -15,16 +18,21 @@ logging_dir = "logs/evaluation"
 Path(logging_dir).mkdir(parents=True, exist_ok=True)
 logger.add(f"{logging_dir}/" + "{time}.log")
 
+# Load Config
+with open("config.yaml", encoding="utf-8") as f:
+    conf = load(f, Loader=SafeLoader)
+logger.info("Config loaded!")
+
 
 def main():
     results = []
 
-    for p_program in Path("programs").glob("**/*.py"):
+    for p_program in Path(conf["programs_dir"]).glob("**/*.py"):
         p_program = str(p_program)
-        problem = p_program[len("programs/") : -len(".py")]
-        p_program_out = "programs/" + problem + ".out"
-        p_in = "dataset/" + problem + ".in"
-        p_out = "dataset/" + problem + ".out"
+        problem = p_program[len(conf["programs_dir"]) : -len(".py")]
+        p_program_out = conf["programs_dir"] + problem + ".out"
+        p_in = conf["dataset_dir"] + problem + ".in"
+        p_out = conf["dataset_dir"] + problem + ".out"
         run_str = f"python {p_program} < {p_in} > {p_program_out}"
         logger.info(run_str)
         try:
