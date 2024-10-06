@@ -26,34 +26,72 @@ with open("config.yaml", encoding="utf-8") as f:
 logger.info("Config loaded!")
 
 
-def generate_func(pipeline, tokenizer, ins, outs):
+def generate_func(
+    pipeline: transformers.Pipeline,
+    tokenizer: transformers.PreTrainedTokenizer | transformers.PreTrainedTokenizerFast,
+    ins: list[str],
+    outs: list[str],
+    desc: str,
+) -> str:
+    """Generates solution's function
+
+    Args:
+        pipeline (transformers.Pipeline): pipeline to generate the solution.
+        tokenizer (transformers.PreTrainedTokenizer | transformers.PreTrainedTokenizerFast): tokenizer for the pipeline.
+        ins (list[str]): problem's input.
+        outs (list[str]): problem's output.
+        desc (str): problem's description
+
+    Returns:
+        str: function
+    """
+
+    code = '"""Problem Description:\n'
+    for line in desc.splitlines():
+        code += f"    {line}\n"
+    code += '"""\n'
     code = "def f(a):\n"
-    code += '    """Returns solution\n'
+    code += '    """Problem Inputs and Outputs:\n'
     for i, o in zip(ins, outs):
         code += f"    >>> f({i})\n"
         code += f"    {o}\n"
     code += '    """\n'
+    logger.debug(f"Code Input: {code}")
+
+    prompt = "".join(conf["system_prompt"]) + code + conf["end_of_instruction"]
+    logger.debug(f"Prompt: {prompt}")
+    logger.info(f"Input Tokens: {tokenizer(prompt, return_tensors='pt', return_length=True)['length']}")
 
     seq = pipeline(
-        code,
+        prompt,
         do_sample=True,
         temperature=0.1,
         num_return_sequences=1,
         eos_token_id=tokenizer.eos_token_id,
         max_new_tokens=conf["max_new_tokens"],
         tokenizer=tokenizer,
-        stop_strings=["def "],  # stop if second func started
-        max_time=conf["max_time"],  # seconds
+        stop_strings=[conf["end_of_sequence"]],
+        max_time=conf["max_time"],
+        return_full_text=False,
     )[0]
-    full_result = seq["generated_text"]
+    raw_result: str = seq["generated_text"]
+    logger.debug(f"Result [Raw]: {raw_result}")
+    logger.info(f"Output Tokens: {tokenizer(raw_result, return_tensors='pt', return_length=True)['length']}")
 
-    # Cut out just the first function
     result = ""
-    for i, line in enumerate(full_result.splitlines()):
-        if i > 0 and len(line) > 0 and line[0] != " ":
-            break
-        if line.strip():
-            result += f"{line}\n"
+    append_flag = False
+    for line in raw_result.splitlines():
+        if append_flag:
+            if line.startswith("```"):
+                append_flag = False
+                break
+            result = result + line + "\n"
+        else:
+            if line.startswith("def"):
+                append_flag = True
+                result = result + line + "\n"
+
+    logger.debug(f"Result [Processed]: {result}")
     return result
 
 
@@ -80,7 +118,16 @@ for case_num in range(1, T + 1):
 """
 
 
-def process_line(line):
+def _process_line(line: str) -> str | list[str]:
+    """Line Processing Helper Function for problem's inputs or outputs.
+
+    Args:
+        line (str): line of text from problem's inputs or outputs.
+
+    Returns:
+        str | list[str]: processed line
+    """
+    
     a = line.split()
     for i in range(len(a)):
         try:
@@ -101,7 +148,12 @@ def process_line(line):
     return a
 
 
-def get_sample_ins_outs():
+def get_sample_data() -> list[tuple[Path, str, str, str]]:
+    """Extracts Problem's Data.
+
+    Returns:
+        list[tuple[Path, str, str, str]]: Problem's path, input, output, and description.
+    """
     results = []
 
     # Find problems where each test case
@@ -121,6 +173,13 @@ def get_sample_ins_outs():
         except FileNotFoundError:
             pass
 
+        p_desc = str(p_in).replace("_sample_input.txt", ".md")
+        try:
+            with open(p_desc, "r") as f:
+                desc = f.read()
+        except FileNotFoundError:
+            pass
+
     for p_in in suitable_problems:
         max_line_len = 100
 
@@ -129,20 +188,20 @@ def get_sample_ins_outs():
         too_large = False
         with open(p_in, "r") as f:
             num_cases = int(f.readline())
-            for case_num in range(num_cases):
+            for _ in range(num_cases):
                 line = f.readline()
                 if len(line) > max_line_len:
                     too_large = True
-                ins.append(process_line(line))
+                ins.append(_process_line(line))
 
         p_out = str(p_in).replace("input.txt", "output.txt")
         with open(p_out, "r") as f:
-            for case_num in range(num_cases):
+            for _ in range(num_cases):
                 line = f.readline()[len("Case #1: ") :]  # Remove Case num prefix
-                outs.append(process_line(line))
+                outs.append(_process_line(line))
 
         if not too_large:
-            results.append((p_in, ins, outs))
+            results.append((p_in, ins, outs, desc))
 
     return results
 
@@ -156,10 +215,10 @@ def main():
         device_map="auto",
     )
 
-    data = get_sample_ins_outs()
-    for p_in, ins, outs in data:
+    data = get_sample_data()
+    for p_in, ins, outs, desc in data:
         logger.info(f"Generating solution for {p_in}...")
-        f = generate_func(pipeline, tokenizer, ins, outs)
+        f = generate_func(pipeline, tokenizer, ins, outs, desc)
         p_program = (
             conf["programs_dir"]
             + str(p_in)[len(conf["dataset_dir"]) : -len("_sample_input.txt")]
