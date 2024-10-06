@@ -4,19 +4,7 @@ Complete the given Python function to solve the competitive programming problem.
 1. Write only the necessary code to complete the function.
 2. Ensure the code is efficient and optimized for competitive programming scenarios.
 3. Use appropriate data structures and algorithms to achieve the best time and space complexity.
-4. Include clear and concise inline comments for complex logic or algorithms.
-5. Handle edge cases and potential errors gracefully.
-6. Adhere to PEP 8 style guidelines for clean and readable code.
-7. Do not include explanations, docstrings, or print statements unless explicitly required by the problem.
-8. If multiple solutions are possible, implement the most efficient one.
-10. Return the expected output as specified in the problem statement.
-
-Complete the following function:
-
-def f(a):
-    # Your code here
-    
-    return solution
+4. If multiple solutions are possible, implement the most efficient one.
 
 Remember, your task is to write only the code that goes inside the function. Do not rewrite the function definition or include any code outside the function.<</SYS>>
 
