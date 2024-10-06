@@ -50,7 +50,7 @@ def generate_func(
     for line in desc.splitlines():
         code += f"    {line}\n"
     code += '"""\n'
-    code = "def f(a):\n"
+    code += "def f(a):\n"
     code += '    """Problem Inputs and Outputs:\n'
     for i, o in zip(ins, outs):
         code += f"    >>> f({i})\n"
@@ -58,7 +58,9 @@ def generate_func(
     code += '    """\n'
     logger.debug(f"Code Input: {code}")
 
-    prompt = "".join(conf["system_prompt"]) + code + conf["end_of_instruction"]
+    with open(conf["system_prompt_path"]) as f:
+        system_prompt = f.read()
+    prompt = system_prompt + code + conf["end_of_instruction"]
     logger.debug(f"Prompt: {prompt}")
     logger.info(f"Input Tokens: {tokenizer(prompt, return_tensors='pt', return_length=True)['length']}")
 
