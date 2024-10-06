@@ -1,13 +1,10 @@
 model_dir: "/mnt/data/models/meta-llama/CodeLlama-13b-Instruct-hf/"
-max_new_tokens: 500
+max_new_tokens: 1000
 max_time: 120
 dataset_dir: "/mnt/data/dataset/"
 programs_dir: "/mnt/data/programs/"
 results_dir: "/mnt/data/results/"
 # Reference: https://www.llama.com/docs/model-cards-and-prompt-formats/meta-code-llama/
-system_prompt:
-  - "<s>[INST] <<SYS>>\n"
-  - "Write the rest of the function in Python to return the expected solution. Only write the code.\n"
-  - "<</SYS>>\n\n"
+system_prompt_path: /root/Meta-HackerCup-2024-AI-Track-Open-Submission/system_prompt.txt
 end_of_instruction: " [/INST]"
 end_of_sequence: " </s>"
